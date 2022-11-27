@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock %}
+
+{% block nav-btn %}
+    {% if not user.is_authenticated %}
+            <div class="col-1">
+                <a class="btn btn-outline-info float-end" href="{% url 'backend' %}">Login</a>
+            </div>
+    {% else %}
+            <div class="col-1">
+                <a class="btn btn-outline-info float-end" href="{% url 'logout' %}">Logout</a>
+            </div>
+    {% endif %}
+{% endblock %}
+
+
+{% block data-content %}
+<div class="container-fluid home-container">
+    <div class="row home-content">
+        <div class="col-lg-12 text-light text-center" data-aos="fade-up" data-aos-duration="2000" data-easing="ease-in-sine">
+            <h1>Welcome to GCOEJ's Library </h1>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'backend.html' %}
+{% block btn %}
+        <div class="col-lg-12">
+            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#EntryModal"><i class="fas fa-plus"></i> Add Entry</a>
+            <a class="btn btn-primary float-end" href="{% url 'backend' %}">Students</a>
+        </div>
+        {% endblock %}
+{% block table %}
+<!-- entries table  -->
+<table class="table table-bordered table-hover table-dark" id="Entry" >
+    <thead>
+        <tr>
+            <td>Name</td>
+            <td>PRN</td>
+            <td>Branch</td>
+            <td>Book Issued</td>
+            <td>Date of issuance</td>
+            <td>Delete</td>
+        </tr>
+    </thead>
+    <tbody>
+        {% for i in entry %}
+            <tr>
+                <td>{{i.Student.name}}</td>
+                <td>{{i.Student}}</td>
+                <td>{{i.Student.branch}}</td>
+                <td>{{i.Book_issued}}</td>
+                <td>{{i.date}}</td>
+                <td class="text-center"><a href="/del_entry/{{i.id}}" class="btn btn-danger" title="Delete entry"><i class="fas fa-trash-can"></i></a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!--****************** Add Entry details modal *********************-->
+<div class="modal" id="EntryModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Adding Entry details</h3>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="/entry_book/" method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-1 mt-3">
+                        <span class="input-group-text side-label">Name</span>
+                        <select name="name" id="" class="form-control">
+                            {% for i in student %}
+                            <option value="{{i.name}}">{{i.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="input-group mb-1 mt-2">
+                        <span class="input-group-text side-label">Book</span>
+                        <input type="text" class="form-control" name="book" >
+                    </div>
+
+                    <div class="input-group mt-2 mb-2 d-flex justify-content-center ">
+                        <input type="submit" class="btn btn-outline-success" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+  </div>
+{% endblock table %}

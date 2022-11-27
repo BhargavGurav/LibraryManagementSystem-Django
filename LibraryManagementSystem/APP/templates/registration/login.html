@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Login{% endblock title %}
+{% block nav-btn %}
+        <div class="col-1">
+            <a class="btn btn-outline-warning float-end" href="{% url 'home' %}">Back</a>
+        </div>
+{% endblock %}
+{% block data-content %}
+<div class="container  mt-5 login-container">
+    <div class="row d-flex justify-content-around p-3">
+        <div class="col-md-7 border border-dark login-box">
+            <div class="btn btn-outline-dark mt-3" style="width: 100%;"><i class="fas fa-lock"></i>&nbsp; RESTRICTED ACCESS</div>
+            <form action="" method="post" autocomplete="off" novalidate>
+                {% csrf_token %}
+                <div class="input-group mb-3 mt-5">
+                    <span class="input-group-text"><i class="fas fa-user-alt"></i></span>
+                    <input type="text" class="form-control" name="username" placeholder="Username">
+                </div>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                    
+                </div>
+                <input type="checkbox" onclick="see()"> Check to see password <br>
+                <input type="submit" value="Login" class="btn btn-primary  mt-4 mb-3" id="login-btn">
+            </form>
+        </div>
+    </div>
+
+    {% if form.errors %}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        swal('Denied !', 'Enter correct data', 'error')
+    </script>
+    {% endif %}
+   
+</div>
+<script>
+    function see(){
+        var password = document.getElementById('password');
+        if(password.type == "password"){
+            password.type = "text";
+        }
+        else{
+            password.type = "password";
+        }
+    }
+</script>
+{% endblock data-content %}

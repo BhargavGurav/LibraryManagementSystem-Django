@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+{% block title %} Backend {% endblock %}
+{% block nav-btn %}
+            <div class="col-1">
+                <a class="btn btn-outline-info float-end" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+            </div>
+{% endblock %}
+{% block data-content %}
+<div class="container-fluid" id="backend-page">
+    <div class="row d-flex justify-content-center align-items-center" id="backend-row">
+        {% block btn %}
+        <div class="col-lg-12">
+            <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#AddModal"><i class="fas fa-plus"></i> Add Student</a>
+            <a class="btn btn-primary float-end" href="{% url 'entry' %}">Entries</a>
+        </div>
+        {% endblock %}
+        <div class="col-lg-8 p-5" >
+            <div id="table-div">
+                {% block table %}
+            
+                <!-- student table  -->
+                <table class="table table-bordered table-hover table-dark" id="student-table">
+                    <thead>
+                        <tr>
+                            <td>Name</td>
+                            <td>PRN</td>
+                            <td>Branch</td>
+                            <td>Year</td>
+                            <td>Edit</td>
+                            <td>Delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in student %}
+                        <tr>
+                            <td>{{i.name}}</td>
+                            <td>{{i.prn}}</td>
+                            <td>{{i.branch}}</td>
+                            <td>{{i.year}}</td>
+                            <td class="text-center"><a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{i.pk}}" title="Edit details"><i class="fas fa-pen"></i></a></td>
+                            <td class="text-center"><a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{i.pk}}" title="Delete details"><i class="fas fa-trash-can"></i></a></td>
+                        </tr>
+
+                        <!--*******************Edit modal*******************-->
+                        <div class="modal" id="editModal{{i.pk}}">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4>Editing Student : {{i.name}}</h4>
+                                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form action="/edit/{{i.pk}}" method="post">
+                                            {% csrf_token %}
+                                            <div class="input-group mb-1 mt-3">
+                                                <span class="input-group-text side-label">Name</span>
+                                                <input type="text" class="form-control" name="name" value="{{i.name}}">
+                                            </div>
+                                            
+                                            <div class="input-group mb-1 mt-2">
+                                                <span class="input-group-text side-label">PRN</span>
+                                                <input type="text" class="form-control" name="prn" value="{{i.prn}}">
+                                            </div>
+
+                                            <div class="input-group mb-1 mt-2">
+                                                <span class="input-group-text side-label">Branch</span>
+                                                <select name="branch" class="form-control" value="{{i.branch}}">
+                                                    <option value="Computer">Computer</option>
+                                                    <option value="Electrical">Electrical</option>
+                                                    <option value="Civil">Civil</option>
+                                                    <option value="Mechanical">Mechanical</option>
+                                                    <option value="Electronics and Tele.">Electronics and Tele.</option>
+                                                    <option value="Instrumentation">Instrumentation</option>
+                                                </select>
+                                                
+                                            </div>
+                        
+                                            <div class="input-group mb-1 mt-2">
+                                                <span class="input-group-text side-label">Year</span>
+                                                <select name="year" class="form-control" value="{{i.year}}">
+                                                    <option value="1st">1st</option>
+                                                    <option value="2nd">2nd</option>
+                                                    <option value="3rd">3rd</option>
+                                                    <option value="4th">4th</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="input-group mt-2 mb-2 d-flex justify-content-center ">
+                                                <input type="submit" class="btn btn-outline-success" value="Submit">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--*******************delete modal*******************-->
+                        <div class="modal" id="deleteModal{{i.pk}}" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteModalLabel"><i class="fas fa-trash-can"></i>&nbsp; Delete Student</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <div class="text-danger"><i class="fas fa-trash-can fa-3x"></i></div>
+                                        <div class="fw-bold">Are you sure, you want to delete Student {{ i.name }}'s data ? </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <a href="/delete_student/{{ i.id }}" class="btn btn-outline-danger">Yes</a>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+    
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endblock %}
+            </div>
+            
+        </div>
+        
+    </div>
+</div>
+
+<!--*******************logout modal*******************-->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="logoutModalLabel"><i class="fas fa-sign-out-alt"></i>&nbsp; Logout</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-center">
+          <div class="text-danger"><i class="fas fa-sign-out-alt fa-3x"></i></div>
+          <div class="fw-bold">Are you sure, you want to logout ? </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <a href="{% url 'logout' %}" class="btn btn-outline-danger">Yes</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--****************** Add student details modal *********************-->
+  <div class="modal" id="AddModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-plus"></i> Adding student details</h3>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <form action="/add/" method="post">
+                    {% csrf_token %}
+                    <div class="input-group mb-1 mt-3">
+                        <span class="input-group-text side-label">Name</span>
+                        <input type="text" class="form-control" name="name" >
+                    </div>
+                    
+                    <div class="input-group mb-1 mt-2">
+                        <span class="input-group-text side-label">PRN</span>
+                        <input type="text" class="form-control" name="prn" >
+                    </div>
+
+                    <div class="input-group mb-1 mt-2">
+                        <span class="input-group-text side-label">Branch</span>
+                        <select name="branch" class="form-control">
+                            <option value="Computer">Computer</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Civil">Civil</option>
+                            <option value="Mechanical">Mechanical</option>
+                            <option value="Electronics and Tele.">Electronics and Tele.</option>
+                            <option value="Instrumentation">Instrumentation</option>
+                        </select>
+                        
+                    </div>
+
+                    <div class="input-group mb-1 mt-2">
+                        <span class="input-group-text side-label">Year</span>
+                        <select name="year" class="form-control">
+                            <option value="1st">1st</option>
+                            <option value="2nd">2nd</option>
+                            <option value="3rd">3rd</option>
+                            <option value="4th">4th</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group mt-2 mb-2 d-flex justify-content-center ">
+                        <input type="submit" class="btn btn-outline-success" value="Submit">
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+    </div>
+  </div>
+   
+
+{% if messages %}
+  {% for message in messages %}
+            {% if message.tags == 'success' %}
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+                <script>
+                    var m = '{{ message }}';
+                    swal('', m, 'success');
+                </script>
+            {% endif %}
+{% endfor %}
+{% endif %}
+<script>
+   
+</script>
+{% endblock %}
